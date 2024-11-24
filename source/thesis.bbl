@@ -1,0 +1,59 @@
+\begin{thebibliography}{1}
+
+\bibitem{hollingsworth}
+Wil Aalst.
+\newblock The application of petri nets to workflow management.
+\newblock {\em Journal of Circuits, Systems, and Computers}, 8:21--66, 02 1998.
+
+\bibitem{Aalst1996}
+Willibrordus Martinus Pancratius van~der Aalst.
+\newblock {\em Structural characterizations of sound workflow nets}, volume
+  9623 of {\em Computing Science Reports}.
+\newblock Technische Universiteit Eindhoven, Eindhoven, Netherlands, 1996.
+
+\bibitem{Asoy2024}
+Andrei Luz~B. Asoy.
+\newblock Automated verification of classical soundness in robustness diagrams
+  with loop and time controls via l-safeness, 2024.
+
+\bibitem{KarenRoben2018}
+Roben~D. Delos~Reyes and Karen Margaret~D. Agnes.
+\newblock Matrix representation and automation of verification of soundness of
+  robustness diagram with loop and time controls, 2018.
+
+\bibitem{Malinao2017}
+Jasmine~A. Malinao.
+\newblock {\em On Building Multidimensional Workflow Models for Complex Systems
+  Modelling}.
+\newblock PhD thesis, Fakultät für Informatik (Pattern Recognition and Image
+  Processing Group) Institute of Computer Graphics and Algorithm, Technische
+  Universität Wien, Vienna, Austria, 2017.
+
+\bibitem{MalinaoPJS2023}
+Jasmine~A. Malinao and Richelle Ann~B. Juayong.
+\newblock Classical soundness in robustness diagram with loop and time
+  controls.
+\newblock {\em Philippine Journal of Science 152(6B)}, pages 2327--2342, 2023.
+
+\bibitem{MalinaoWCTP2023}
+Jasmine~A. Malinao and Richelle Ann~B. Juayong.
+\newblock Reset profiles and classical soundness in robustness diagrams with
+  loop and time controls.
+\newblock {\em Pre-proceedings of the 12th Workshop on Computation: Theory and
+  Practice (WCTP 2023)}, pages 371--394, 2023.
+
+\bibitem{Ramirez2024}
+Ronnie~M. Ramirez~II.
+\newblock On weak, lazy, and easy soundness in robustness diagrams with loop
+  and time controls, 2024.
+
+\bibitem{Sulla2023}
+Cris Niño~N. Sulla and Jasmine~A. Malinao.
+\newblock Mapping of robustness diagram with loop and time controls to petri
+  net with considerations on soundness.
+\newblock In Katerina Kabassi, Phivos Mylonas, and Jaime Caro, editors, {\em
+  Novel {\&} Intelligent Digital Systems: Proceedings of the 3rd International
+  Conference (NiDS 2023)}, pages 338--353, Cham, 2023. Springer Nature
+  Switzerland.
+
+\end{thebibliography}
