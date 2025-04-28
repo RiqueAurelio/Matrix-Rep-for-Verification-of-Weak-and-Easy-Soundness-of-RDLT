@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\begin{document}
+
+% Algorithms:
+% TODO: - Deadlock-Resolving Algorithm (R_i) -> Boolean (outputs if R_i is deadlock resolving or not)
+% TODO: - Contraction Path Generation (R_i) -> Path P
+% TODO: - Enumeration of Deadlocks (V_i, P, RV_C) -> deadlock points dV
+% TODO: - Find Escape Contraction Path Algorithm(w, f', P, RV_adj) -> Boolean
+
+\begin{algorithm}
+    % \label{alg:MB-deadlock-resolving}
+    \caption{Matrix-based Deadlock-resolving Verification Algorithm}
+    \begin{algorithmic}
+        \State \textbf{Input:} $R_i$  
+        \State \textbf{Output:} Boolean; True, otherwise False  
+        \State $P$ \gets $R$ 
+    \end{algorithmic}
+\end{algorithm}
+% \begin{algorithm}
+% \caption{Identifying Points of Delay}
+% \begin{algorithmic}[1]
+% \State $\text{contraction\_adj} \gets R V^f_{adj}[0]$
+% \For{\textbf{each} column $y$ in $\text{contraction\_adj}$}
+%     \If{$\text{contraction\_adj}[y] = 1$}
+%         \State $\text{constraints\_stack} \gets \emptyset$ \Comment{Initialize empty set}
+%         \State $\text{constraints\_counter} \gets 0$
+%         \For{\textbf{each} row $x$ in $R V^f_C[y]$}
+%             \If{$x \neq \text{null} \land x \neq \epsilon \land x \notin \text{constraints\_stack}$}
+%                 \State Add $x$ to $\text{constraints\_stack}$
+%                 \State $\text{constraints\_counter} \gets \text{constraints\_counter} + 1$
+%             \EndIf
+%         \EndFor
+%         \If{$\text{constraints\_counter} > 1$}
+%             \State $y \gets y \cup dV$
+%         \EndIf
+%     \EndIf
+% \EndFor
+% \end{algorithmic}
+% \end{algorithm}
+
+% \include{contraction_algo}
+
+
+\end{document}

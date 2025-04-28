@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, algorithm, algorithmicx, algpseudocode}
+
+\begin{document}\documentclass{article}
+\usepackage{amsmath, amssymb, algorithm, algorithmicx, algpseudocode}
+
+\begin{document}
+
+\section*{Contraction Algorithm for RDLT}
+
+\begin{algorithm}[H]
+\caption{\textbf{Matrix-based Contraction Path Generation}}
+\label{alg:MCA_phase1}
+\textbf{Given} RDLT R; Pre-processing Steps:
+
+\textbf{Input}: Expanded vertex simplification $R_i$ of RDLT R
+
+\textbf{Output}: Contraction Path P
+
+\textbf{Matrices}: $RV^{t}_{\text{adj}}$ and $RV^{t}_{\text{C}}$
+
+\begin{algorithmic}[1]
+\State Initialize Arc Connectivity Matrix $RV^{0}_{\text{adj}}$ of $R_i$
+\State Initialize C-Attribute Matrix $RV^{0}_{\text{C}}$ of $R_i$
+\State Let $s' \in V_i$ be the source and $f' \in V_i$ be the sink
+\State Let $x = s'$
+\State Initialize $P = \{x\}$
+\State Let $t = 1$
+\While{$P$ does not contain $f'$}
+    \State $\mathcal{Y} \leftarrow \{ y \in V_i \mid RV^{t-1}_{\text{adj}}(x,y) \geq 1 \}$
+    \State Select any $y \in \mathcal{Y}$
+    \State Let $\text{LHS} = RV^{t-1}_{C}(x,y) \cup \{\epsilon\}$
+    \State $\mathcal{U} \leftarrow \{ u \in V_i \mid u \neq x \wedge (RV^{t-1}_{\text{adj}}(u,y) \geq 1) \}$
+    \State Let $\text{RHS} = \bigcup_{u \in \mathcal{U}} RV^{t-1}_{C}(u,y)$
+    \If {$\text{LHS} \supseteq \text{RHS}$}
+        % \State Update $RV^{t-1}_{C}(u,y) = \epsilon, \forall (u,y) \in E_i, u \neq x$
+        \ForAll {$u \in \mathcal{U}$}
+            \State $RV^{t-1}_{C}(u,y) = \epsilon$
+        \EndFor
+        \State Let $z = x \land y$
+        % \State Let $z = xy$ = Matrix Addition of rows (columns) $x$ and $y$ in $RV^{t-1}_{\text{adj}}$
+        \ForAll {$w \in V_i$}
+            \State RowMerge\_Adj: $RV^{t}_{\text{adj}}(z,w) = RV^{t-1}_{\text{adj}}(x,w) + RV^{t-1}_{\text{adj}}(y,w)$
+            \State ColMerge\_Adj: $RV^{t}_{\text{adj}}(w,z) = RV^{t-1}_{\text{adj}}(w,x) + RV^{t-1}_{\text{adj}}(w,y)$
+        \EndFor
+        % \State Let $z = xy$ = Element-wise Set Union of rows (columns) $x$ and $y$ in $RV^{t-1}_{C}$
+        \ForAll {$w \in V_i$}
+            \State RowMerge\_C: $RV^{t}_{C}(z,w) = RV^{t-1}_{C}(x,w) \cup RV^{t-1}_{C}(y,w)$
+            \State ColMerge\_C: $RV^{t}_{C}(w,z) = RV^{t-1}_{C}(w,x) \cup RV^{t-1}_{C}(w,y)$
+        \EndFor
+        \State $V_i = (V_i \setminus \{x,y\}) \cup \{z\}$
+        \State Create $RV^{t}_{\text{adj}}$ as an $m \times m$ matrix where $m = n - t$ and as the submatrix of $RV^{t-1}_{\text{adj}}$ with rows and columns indexed by updated vertex set $V_i$ of $R_i$
+        \State Create $RV^{t}_{C}$ as an $m \times m$ matrix where $m = n - t$ and as the submatrix of $RV^{t-1}_{C}$ with rows and columns indexed by updated vertex set $V_i$ of $R_i$
+        \State Let $x = z$
+        \State Let $P = P \cup \{y\}$
+        \State Let $t = t + 1$
+    \EndIf
+\EndWhile
+\State \textbf{return} P
+\end{algorithmic}
+\end{algorithm}
+
+
+\end{document}
+

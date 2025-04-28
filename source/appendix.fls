@@ -1,0 +1,6 @@
+PWD C:\Users\Nathaniel Eulin\Documents\Matrix Representation for the Verification of Weak and Easy Soundness of RDLT\source
+INPUT C:\Users\Nathaniel Eulin\AppData\Local\MiKTeX\miktex\data\le\pdftex\latex.fmt
+INPUT appendix.tex
+OUTPUT appendix.log
+INPUT C:\Users\Nathaniel Eulin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
+OUTPUT appendix.dvi

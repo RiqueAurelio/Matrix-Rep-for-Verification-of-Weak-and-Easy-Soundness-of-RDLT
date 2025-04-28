@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\begin{document}
+
+    % Algorithms:
+    % TODO: - Deadlock-Resolving Algorithm (R_i) -> Boolean (outputs if R_i is deadlock resolving or not)
+    % TODO: - Contraction Path Generation (R_i) -> Path P
+    % TODO: - Enumeration of Deadlocks (V_i, P, RV_C) -> deadlock points dV
+    % TODO: - Find Escape Contraction Path Algorithm(w, f', P, RV_adj) -> Boolean
+
+\begin{algorithm}[H]
+    % \label{alg:MB-deadlock-resolving}
+    \caption{Matrix-based Deadlock-resolving Verification Algorithm}
+
+    \textbf{Input:} Expanded Vertex Simplification $R_i$ of RDLT $R$, Contraction Path Algorithm, Find Escape Contraction Path Algorithm  
+
+    \textbf{Output:} Boolean; $True$, otherwise $False$
+
+    \textbf{Matrices:} Adjacency Matrix $RV_adj$, Constraint matirx $RV_C$
+
+    \begin{algorithmic}[1]
+        \State $P \gets Contraction Path Generation Algorithm (R_i)$
+        \Statex \textbf{Deadlock Identification:} Vertices not in P, but are adjacent to P, and are PODs
+        \State $dV \gets \emptyset$ \Comment{Initialize deadlock set}
+        \State $unreachable\_vertices \gets V_i / P$ 
+        \ForAll{vertex $x \in unreachable\_vertices$}   
+            \State Let $l$ be the index of vertex $x$ in $V_i$
+            \State $constraints\_stack \gets \emptyset$
+            \State $constraints\_counter\gets 0$
+
+            \ForAll{row $k$ in $RV_C$} 
+                \State $c \gets RV_C[k][l]$
+                \If {$c \neq \emptyset \land c \notin \{\epsilon\} \cup constraints\_stack$}
+                    \State $constraints\_stack \gets constraints\_stack \cup \{c\}$
+                    \State $constraint\_counter \gets constraint\_counter + 1$
+                \EndIf
+            \EndFor
+            \If{$constraints\_counter \geq 2$}
+                \State $dV \gets x_l \cup dV$
+            \EndIf
+        \EndFor
+        \Statex \textbf{Enumeration of Parents of Deadlocks}: Reachable Parents of Identified Deadlocks
+        \ForAll {vertex $x \in dV$}    
+            \State $parents(x) \gets \emptyset$
+            \State Let $l$ be the index of vertex $x$ in $V_i$
+            \ForAll {row $k$ in $RV_{adj}$}
+                \If {$RV_{adj}[k][l] = 1 \land x_k \in P$} \Comment{The parent vertex needs to be reachable, hence included in the contraction path}
+                    \State $parent(x) \gets x_k \cup parent(x)$
+                \EndIf
+            \EndFor
+            \ForAll {parent vertex $w \in parent(x)$}
+                % what do I need to include in here? 
+                \State $escapePathExists \gets findEscapePath(w, f', P, RV_{})$
+                \If{$escapePathExists = false$}
+                    \State \textbf{return} $False$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \textbf{return} $True$
+
+        
+        % proper algorithm for the statement above
+    \end{algorithmic}
+\end{algorithm}
+
+
+\include{contraction_algo}
+\include{findEscapePath_algo}
+
+\end{document}

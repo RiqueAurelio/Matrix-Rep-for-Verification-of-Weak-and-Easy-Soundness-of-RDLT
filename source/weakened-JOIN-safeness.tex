@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, algorithm, algorithmicx, algpseudocode}
+
+\begin{document}
+    \begin{algorithm}[H]
+    \caption{\textbf{Matrix-based Weakened JOIN-Safeness Verification}} 
+    \textbf{Input:} Arc List $E$, Safe Vector, LoopSafe Vector, $C$-attribute Vector $CV$
+    \textbf{Output:} Boolean: $WeakJoinSafe$
+        \begin{algorithmic}[1]
+            \State$WeakJoinSafe \gets \emptyset$
+            \State$V_{in}(v) \gets {u \in V | (u, v) \in E}$
+            \State$V_{out}(v) \gets {u \in V | (v, w) \in E}$
+            \State$Joins \gets {v \in V | |V_{in}(v)| > 1 \land v \notin V_{source}}$
+            \State$Splits \gets {v \in V | |V_{out}(v) > 1 \land v \notin V_{target}}$
+            \ForAll$j \in Joins$
+                \State$ValidSources \gets \{s \in Splits | Paths(s, j) \neq \emptyset\}$
+                \State$ValidPathVertices \gets \bigcup_{s \in ValidSources}\bigcup_{p \in Paths(s,j)}\{v | v \in p\}$ 
+                \State$ValidPathArcs\gets \bigcup_{s \in ValidSources}\bigcup_{p \in Paths(s,j)}\{(p_i, p_{i+1}) | i \in [0, |p| - 2]\}$ 
+                % go through each vertices and check whether or not there is one split origin
+                
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
+
+\end{document}

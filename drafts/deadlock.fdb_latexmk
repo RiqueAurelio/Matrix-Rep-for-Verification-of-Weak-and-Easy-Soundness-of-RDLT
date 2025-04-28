@@ -1,0 +1,9 @@
+# Fdb version 4
+["pdflatex"] 0 "deadlock.tex" "deadlock.pdf" "deadlock" 0 -1
+  "deadlock.aux" 0 -1 0 "pdflatex"
+  "deadlock.tex" 0 -1 0 ""
+  (generated)
+  "deadlock.aux"
+  "deadlock.log"
+  "deadlock.pdf"
+  (rewritten before read)

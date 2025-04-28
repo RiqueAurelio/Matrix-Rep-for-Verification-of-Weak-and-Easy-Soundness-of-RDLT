@@ -1,0 +1,33 @@
+\begin{algorithm}[H]
+\caption{\textbf{Matrix-Based Finding Escape Contraction Path Algorithm}}
+\label{alg: findEscapeConractionPath}
+\textbf{Given}: RDLT $R_i$; Preprocessing
+
+
+\textbf{Input}: Parent Vertex $w$, Sink $f'$, Contraction Path $P$, Adjacency Matrix of $R_i$ $RV_{adj}$
+
+\textbf{Output}: Boolean, $True$, otherwise $False$  
+
+\begin{algorithmic}[1]
+    \State Initialize $Visited[0...n-1] \gets false$ \Comment for each vertex in $V_i$
+    \State Initialize $Q \gets$ empty queue
+    \State $Q.queue(w)$
+    \State $Visited[w] \gets true$
+    \While{$Q \neq \emptyset$}
+        \State $current \gets Q.dequeue()$
+        \State Let $k$ be the index of $current$ vertex in $V_i$
+        \If{$current = f'$}
+            \State \textbf{return }$True$
+            \ForAll{vertex $x$ in $P$}  
+                \State  Let $l$ be the index of $x$ in $V_i$
+                \If {$RV_{adj}[k][l] = 1 \land Visted[l]= false $}
+                    \State $Q.enqueue(x)$
+                    \State $Visited[l] \gets true$
+                \EndIf
+            \EndFor
+        \EndIf
+    \EndWhile
+    \State \textbf{return }$False$
+    
+\end{algorithmic}
+\end{algorithm}

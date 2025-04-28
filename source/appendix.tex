@@ -1,0 +1,240 @@
+\appendix
+\section*{Appendix A: Activity Extraction Algorithm}
+\begin{algorithm}[H]
+    \caption{Activity Extraction Algorithm ${\mathcal A}$ \cite{Malinao2017, Sulla2023}}
+    \label{ActivityExtraction}
+    \begin{algorithmic}
+        \State \textbf{Input:} $ R $, $ s \in V $, $ f \in V $
+        \State \textbf{Output:} vertices $ S $ of $ R $, $ \emptyset $ otherwise
+    \end{algorithmic}
+    \begin{algorithmic}[1]
+        \State Initialize $ S $
+        \For{every $ (x,y) $}
+            \State Initialize $ T((x,y)) $ such that $ T((x,y)) $ $ = $ $ (t_1, ..., t_n) $ where $ n $ $ = $ $ L((x,y)) $ and $ t_i $ $ \epsilon $ $ \mathbb{N} $ is the time a check or traversal is done on $ (x,y) $ by $ A $.
+        \EndFor
+        \State Let $ x $ $ = $ $ s $.
+        \While{$ x $ $ \neq $ $ f $}
+            \State Select $ (x,y) $ $ \epsilon $ $ E $ where $ L((x,y)) $ has not been reached.
+            \If{$ \exists (u,x) $ $ \epsilon $ $ E $ $ = $ $ max(T((u,x))) $}
+                \State Assign $ maxV $ $ + $ $ 1 $ to the leftmost zero of $ T((x,y)) $. 
+            \Else
+                \State $ maxV $ $ = $ $ 0 $.
+            \EndIf
+            \State Determine whether $ (x,y) $ is an unconstrained arc or not.
+            \If{$ (x,y) $ is unconstrained}
+                \State Traverse $ (x,y) $ .
+                \State Assign $ MAX $ $ + $ $ 1 $ to $ T((x,y)) $ where $ MAX $ is the maximum value from all $ T((v',y)) $ $ \forall $ $ v' $ $ \epsilon $ $ V $ where $ (v',y),(v,y) $, and $ (x,y) $ are type-alike.
+                \For{every $ (v,y) $ $ \epsilon $ $ E $ that is type-alike with $ (x,y) $}
+                    \State Assign $ MAX $ $ + $ $ 1 $ to every $ T((x,y)) $.
+                    \If{$ C((v,y)) $ $ \epsilon $ $ \Sigma $}
+                        \State The last value in $ T((x,y)) $ where the last check was done on $ (v,y) $ is updated.
+                    \ElsIf{$ v $ is either type 'b' or 'e' and $ y $ is type 'c'}
+                        \State The first value in $ T((x,y)) $ is updated.
+                    \EndIf
+                \EndFor
+            \ElsIf{$ (x,y) $ is not unconstrained and not other $ (x,y') $ $ \epsilon $ $ E $ where $ y' $ $ \epsilon $ $ V $ can be selected }
+                \State Backtrack to $ a $ $ \epsilon $ $ V $ where $ (a,x) $ $ \epsilon $ $ E $ and $ a $ was previously visited by the algorithm to reach $ x $.
+            \EndIf
+        \EndWhile
+        \If{activity extraction fails}
+            \State \Return $ \emptyset; $
+        \Else
+            \State \Return $ S $
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+\section*{Appendix B: Check Subroutine}
+\begin{algorithm} 
+    \begin{algorithmic}
+        \State \textbf{Input:} $x \in V$
+        \State \textbf{Output:} $y \in V$ if the arc attribute $L((x,y))$ allows that at least one traversal on the arc, $\emptyset$ otherwise
+    \end{algorithmic}
+    \begin{algorithmic}[1]
+        \State $y \gets w$ where $w \in V$, $(x,w) \in E$ and for $1 \leq i \leq |L(x,w)|$ such that either $CTInd_{(x,y)}[i-1] = 2$ and $CTInd_{(x,y)}[i] = 0$, or $CTInd_{(x,y)}[i=1] = 0$\;
+        \If {$y \neq \emptyset$} 
+            \If {$\exists(u,x) \in E, u \in V$}
+                \State $t_i \in T((x,y)): t_i \gets maxV + 1$ where $maxV = \displaystyle\max_{\forall u, (u,x) \in E} \{{\displaystyle\max_{k=1, 2, \ldots, L((u,x)),  t_k \in T((u,x))}{\{t_k\}}}\} + 1$\;
+            \Else
+                \State $t_i \in T((x,y)): t_i \gets 1$\;
+            \EndIf
+            \State return $y$;
+        \Else
+            \State return $0$;
+        \EndIf
+    \end{algorithmic}
+   \caption{$Check(x)$: Determines if there exists some $y \in V$ where $(x,y) \in E$ and its attribute $L((x,y))$ allows that at least one traversal on the arc. If $y$ exists, the algorithm updates $T((x,y))$ and returns $y$, otherwise it returns $\emptyset$.}
+   \label{alg:Check}
+\end{algorithm}
+\section*{ Expanded Vertex Simplification Algorithm (EVSA)}
+\begin{algorithm}
+    \label{EVSA}
+    \underline{\textbf{Expanded Vertex Simplification Algorithm(EVSA):}}\\
+    \textbf{Inputs:} Let $R = (V, E, T, M)$ be an connected RDLT with an RBS, i.e. $\exists v \in V$, where $M(v) = 1$. Let $R_1 = (V_1, E_1)$ and $R_2 = (V_2, E_2)$ be the vertex simplifications of $R$. (The $C$-attributes of the arcs of $R$, $R_1$, and $R_2$ are denoted as $C$, $C_1$, $C_2$, respectively, while their $L$-attributes are $L$, $L_1$, and $L_2$, respectively.) \\
+
+    \noindent
+    \textbf{Outputs:} \textbf{Level 1 and Level 2 expanded vertex simplification} $R'_1 = (V'_1, E'_1, T'_1)$ and $R'_2 = (V'_2, E'_2, T'_2)$ of $R$, respectively . (The $C$-attributes of the arcs of $R'_1$ and $R'_2$ are $C'_1$ and $C'_2$, respectively, while their $L$-attributes are $L'_1$ and $L'_2$, respectively.)
+
+    \begin{enumerate}
+        \item For each $v \in V_1(V_2)$(or $V$ of $R$), set $v' \in V'_1(V'_2)$ to be its corresponding vertex, and if $(u,v) \in E_1(E_2)$, then its there is a corresponding arc $(u',v') \in E'_1(E'_2)$, where the $C$-values $C'_1(u',v')(C_2(u',v'))$ of $R'_1(R'_2)$ is set to $C(u,v)$ of $R_1(R_2)$, otherwise, none.  \\
+
+        This step copies the vertices and arcs, inclusive of the $C$-values of $R_1$ and $R_2$ to their corresponding expanded versions $R'_1$ and $R'_2$, respectively. 
+
+        \item For each $(u,v) \in E$, where $(u,v)$ is not in an RBS of $R$, and its corresponding arc $(u',v') \in V'_1$ of $L_1$, let $L'_1(u',v') = L(u,v)$. \\
+
+        This step copies the $L$-values of $R$ for each of its arcs to the $L$-values of $R'_1$ whenever such arc does not belong to an RBS of $R$. 
+        
+        \item For each abstract arc $(u',v') \in E'_1$ of $R_1$, where $(u',v')$ represents the path \mbox{$p = x_1 x_2 \ldots x_n$} in $R$, i.e. $x_1 \in V$ and $x_n \in V$ correspond to $u' \in E'_1$ and  $v' \in E'_1$, respectively, set $L'_1(u',v') = \min\limits_{i = 1, \ldots, n-1} \{eRU(x_i, x_{i+1})\} + 1$. \\
+        
+        This step sets the $L$-value  of each abstract arc $(u',v')$ of $R'_1$ to reflect the maximum number of reuse of the path that it represents in $R$. Note that we treat each component of the RBS as an NCA relative to the non-RBS components, $eRU(u',v')$ must be greater than its reusability, e.g. greater than the PCAs of the cycles $(u',v')$ are involved in, hence, we add 1 to this maximum number of reuse. Additionally, note the $eRU$ of the arcs along the path $p$ can vary because of the reuse of such components within the RBS, albeit the number of times they are accessible through the in-bridges of their ancestor node is the same. However, the reusability of the entire path $p$ itself is bound to the minimum of the $L$-values of the arcs therein. Thus, this minimum shall be the representative $L$-value for these arcs as reflected by their representative abstract arc.
+    \end{enumerate}
+\end{algorithm}
+
+
+\section*{Structural Verification of Weak Soundness of an RDLT}
+\begin{algorithm}[H]
+    \caption{Weak RDLT Soundness Verification Algorithm (WRSVA) }
+    \label{WeakAlg}
+    \begin{algorithmic}
+        \State \textbf{Input:} RDLT $ R $ with or without RBS
+        \State \textbf{Output:} True, false otherwise
+    \end{algorithmic}
+    \begin{algorithmic}[1]
+        \State Apply Expanded Vertex Simplification Algorithm \cite{MalinaoWCTP2023}
+        \If{$ R $ contains an RBS}
+            \State $ i $ $ = $ $ 2 $
+        \Else
+            \State $ i $ $ = $ $ 1 $
+        \EndIf
+        \For{every vertex simplification $ R_i $}
+            \For{every vertex $ v $ $ \in $ $ V $}
+                \State Store deadlock point $ y $
+            \EndFor
+            \For{every deadlock point $ y $ $ \in $ $ V $}
+                \State Determine if a non-critical loop-safe escape contraction path exists from $ y $
+                \State Determine if the split-join pair containing $ y $ has weakened JOIN-safe L-values
+            \EndFor            
+        \EndFor
+        \If{$ R_1 $ is deadlock-tolerant}
+            \If{$ R $ contains an RBS}
+                \If{$ R_2 $ deadlock-tolerant}
+                    \State \Return true
+                \EndIf
+            \EndIf
+            \State \Return true
+        \Else
+            \State \Return false
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{thm}\textbf{Time Complexity of WRSVA}
+    The time complexity of verifying that an RDLT $ R $ is weak-sound is $ O(c|E|^4) $.
+    \label{TCWRSVA}
+\end{thm}
+\begin{proof}
+    The algorithm is divided into three main processes: (1) expanded vertex simplification \cite{MalinaoWCTP2023}, (2) determining the deadlock-points, and (3) verifying deadlock tolerance. For the first process, it has a time complexity of $ O(|V|^2)$ which corresponds to the maximum number of arcs $ R $ can have. Because the algorithm visits every arc of the diagram to replicate them or create abstract versions for the outputs $ R_1 $ and $ R_2 $ (if an RBS exists), the worst-case scenario for this algorithm is when the RDLT has the maximum amount of arcs, hence $ O(|V|^2) $. 
+    
+    For the second process, it has a time complexity of $ O(|V|+|E|)$, where it corresponds to the sum of the number of vertices $ V $ and arcs $ E $ in $ R $. This process uses the depth-first or breadth-first search algorithm to solve the problem, hence $ O(|V|+|E|) $.
+
+    The third process of verifying deadlock tolerance can be divided into its four requirements which has their own processes: (1) verifying loop-safeness, which takes $ O(c|E|^4) $ time \cite{MalinaoPJS2023}, (2) verifying existence of safe critical arcs, which takes $ O(|E|^2) $ time \cite{MalinaoPJS2023}, (3) verifying weakened JOIN-safeness, and (4) verifying deadlock resolution.
+    
+    The verification of weakened JOIN-safeness can be further divided into its component processes and determining each of their time complexities. Specifically for every AND- and MIX-JOIN, it concerns the processes of (1) determining the one split origin, (2) determining if there are no unrelated process, (3) determining if there are no branches, (4) determining if there are no processes interruptions with a C-value of $ Sigma $, (5) determining duplicate conditions at the merge point, (6) determining the equality of the L-values, and (7) determining the non-existence of critical arcs. The first three processes take $ O(|V||E|^2) $ time \cite{MalinaoPJS2023}. The fourth process takes $ O(|V||E|) $ time, similar to its stricter counterpart in \cite{MalinaoPJS2023} where it avoids all process interruptions no matter the $ C $-attribute. The fifth and sixth processes takes $ O(|V||E|log|E|) $ and $ O(|V||E|) $ time respectively \cite{MalinaoPJS2023}. The last process to determine the number takes $ O(c|E|) $ where $ c $ is the number of cycles as it is the highest time complexity of the required steps to find so, specifically Problem 1 to 3 in Lemma 1 of \cite{Malinao2017}. Because the dominating processes in terms of time complexity are the first three processes, the time complexity of verifying weakened JOIN-safeness is $ O(|V||E|^2) $.
+
+    Lastly, verifying if the RDLT $ R $ is deadlock-resolving requires $ O(p(|V| + |E|)) $ where $ p $ signifies the number of deadlock points since deadlock-resolving is essentially the process of graph contraction, which takes $ O(|V| + |E|) $ \cite{MalinaoPJS2023}, for every deadlock point in $ R $.
+    
+    With the time complexities of the sub-processes of deadlock tolerance, verifying loop-safeness has the greatest complexity out of the processes, making the time complexity of determining deadlock tolerance is $ O(c|E|^4) $.
+
+    Since the time complexity of the determining deadlock tolerance is greater out of the processes as well, the weak soundness of $ R $ can be determined in $ O(c|E|^4) $ time.
+\end{proof}
+
+\begin{thm}\textbf{Space Complexity of WRSVA}
+    The space complexity of verifying that an RDLT $ R $ is weak-sound is $ O(|E|^2) $.
+    \label{SCWRSVA}
+\end{thm}
+\begin{proof}
+    As mentioned earlier, the algorithm is divided into three main processes. For the first process of EVS, it has a space complexity of $ O(|V|^2)$ which corresponds to the maximum number of arcs $ R $ can have. Because the algorithm stores every arc of the diagram to replicate them or create abstract versions for the outputs $ R_1 $ and $ R_2 $ (if an RBS exists), the worst-case scenario for this algorithm is when the RDLT has the maximum amount of arcs, hence $ O(|V|^2) $. 
+    
+    For the second process, it has a space complexity of $ O(|V|+|E|)$ similar to its time complexity. It stores the vertices and arcs traversed to create the contraction path as it uses the depth-first or breadth-first search algorithm to solve the problem, hence $ O(|V|+|E|) $.
+
+    The third process of verifying deadlock tolerance can be divided into its four requirements which has their own processes: (1) verifying loop-safeness, which takes $ O(c|E|) $ space \cite{MalinaoPJS2023}, (2) verifying existence of safe critical arcs, which takes $ O(|v|+|E|) $ space \cite{MalinaoPJS2023}, (3) verifying weakened JOIN-safeness, and (4) verifying deadlock resolution.
+    
+    The verification of weakened JOIN-safeness can be further divided into its component processes and determining each of their space complexities. Specifically for every AND- and MIX-JOIN, it concerns the processes of (1) determining the one split origin, (2) determining if there are no unrelated process, (3) determining if there are no branches, (4) determining if there are no processes interruptions with a C-value of $ Sigma $, (5) determining duplicate conditions at the merge point, (6) determining the equality of the L-values, and (7) determining the non-existence of critical arcs. The first five processes as well as the last process use $ O(|E|^2) $ space \cite{MalinaoPJS2023}. However, the sixth process uses $ O(|V||E|) $ space. Because the sixth process needs the least amount of space and is the sole process with a different complexity, the space complexity of verifying weakened JOIN-safeness is $ O(|E|^2) $.
+
+    Lastly, verifying if the RDLT $ R $ is deadlock-resolving requires $ O(p(|V| + |E|)) $ space similar to its time needed as this process is similar to the graph contraction for every deadlock point in $ R $.
+    
+    With the space complexities of the sub-processes of deadlock tolerance, verifying loop-safeness has the greatest complexity out of the processes, making the time complexity of determining deadlock tolerance is $ O(|E|^2) $.
+
+    Since the space complexity of the determining deadlock tolerance is greater out of the processes as well, the weak soundness of $ R $ can be determined with $ O(|E|^2) $ space.
+\end{proof}
+
+\section*{Structural Verification of Easy Soundness of an RDLT}
+
+\begin{thm}\textbf{Structural Verification of the Easy Soundness of an RDLT $ R $}
+    \label{SVEasy}
+    An RDLT $ R $ is easy-sound if and only if the following elements exist: 
+    \begin{itemize}
+        \item A contraction path $ P_1 $ in the level-1 vertex simplification $ R_1 $ of $ R $ from the initial vertex $ x_i $ to the final vertex $ x_f $, wherein $ P_1 $ $ = $ $ x_1, \ldots, x_f $
+        \item A contraction path $ P_2 $ in the level-2 vertex simplification $ R_2 $ of $ R $ from the initial vertex $ z $ to the final vertex $ p $ of the RBS, wherein $ P_2 $ $ = $ $ z, \ldots, p $
+        \item An in-bridge $ (x,y) $ formed by a component in $ P_1 $ such that there exists a component $ (y,z) $ in $ P_2 $
+        \item An out-bridge $ (q,p) $ formed by a component in $ P_2 $ such that there exists a component $ (p,r) $ in $ P_1 $
+    \end{itemize}
+\end{thm}
+
+With Theorem \ref{SVEasy} as the basis, Algorithm \ref{EasyAlg} verifies the easy soundness of a given input RDLT $ R $ through the satisfaction of a contraction path existing from the source to the sink vertex.
+
+\begin{algorithm}[H]
+    \caption{Easy RDLT Soundness Verification Algorithm (ERSVA) }
+    \label{EasyAlg}
+    \begin{algorithmic}
+        \State \textbf{Input:} RDLT $ R $ with or without RBS
+        \State \textbf{Output:} True, false otherwise
+    \end{algorithmic}
+    \begin{algorithmic}[1]
+        \State Apply Vertex Simplification Algorithm \cite{Malinao2017}
+        \If{$ R $ contains an RBS}
+            \State $ i $ $ = $ $ 2 $
+        \Else
+            \State $ i $ $ = $ $ 1 $
+        \EndIf
+        \For{every vertex simplification $ R_i $}
+            \State Apply Graph Contraction Strategy \cite{Malinao2017}
+        \EndFor
+        \If{$ R_1 $ has a contraction path from the source $ x_1 $ to the sink $ x_n $}
+            \If{$ R $ contains an RBS}
+                \If{$ R_2 $ has a contraction path from the source $ z $ to the sink $ p $}
+                    \State \Return true
+                \EndIf
+            \EndIf
+            \State \Return true
+        \Else
+            \State \Return false
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{thm}\textbf{Time Complexity of ERSVA}
+    The time complexity of verifying that an RDLT $ R $ is easy-sound is $ O(|V|^2) $.
+    \label{TCERSVA}
+\end{thm}
+\begin{proof}
+    The algorithm is divided into two main processes: (1) vertex simplification \cite{Malinao2017} and (2) graph contraction \cite{Malinao2017, MalinaoPJS2023}. For the first process, it has a time complexity of $ O(|V|^2)$ which corresponds to the maximum number of arcs $ R $ can have. Because the algorithm visits every arc of the diagram to replicate them or create abstract versions for the outputs $ R_1 $ and $ R_2 $ (if an RBS exists), the worst-case scenario for this algorithm is when the RDLT has the maximum amount of arcs, hence $ O(|V|^2) $. 
+    
+    For the second process, it has a time complexity of $ O(|V|+|E|)$, where it corresponds to the sum of the number of vertices $ V $ and arcs $ E $ in $ R $, because the process essentially determines if there exists a path from the source vertex to every vertex. Although this process is only done to make sure that there is a path from the source to the sink vertex, this complexity still applies as a worst-case scenario when there are no deadlocks within $ R $, i.e. $ R $ is live. As proved in \cite{MalinaoPJS2023}, this process uses the depth-first or breadth-first search algorithm to solve the problem, hence $ O(|V|+|E|) $.
+
+    Since the time complexity of the vertex simplification is greater out of the two processes, the easy soundness of $ R $ can be determined in $ O(|V|^2) $ time.
+\end{proof}
+
+\begin{thm}\textbf{Space Complexity of ERSVA}
+    \label{SCERSVA}
+    The space complexity of verifying that an RDLT $ R $ is easy-sound is $ O(|V|^2) $.
+\end{thm}
+\begin{proof}
+    Similar to the time complexity, the algorithm is divided into the vertex simplification and graph contraction. 
+    
+    For the first process, it has a space complexity of $ O(|V|^2)$ as the process stores every arc within $ R $ to generate $ R_1 $ and $ R_2 $ if $ R $ has an RBS. The worst-case scenario is $ R $ having the maximum amount of arcs given a number of vertices $ V $,  hence $ O(|V|^2) $. 
+
+    For the second process, it has a space complexity of $ O(|V| + |E|) $ \cite{MalinaoPJS2023} as the process stores the vertices and arcs to simulate the possible contraction path of both the vertex simplifications. 
+
+    Since the space complexity of the vertex simplification is greater out of the two processes, the easy soundness of $ R $ can be determined using $ O(|V|^2) $ space.
+\end{proof}
